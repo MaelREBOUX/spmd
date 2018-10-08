@@ -23,6 +23,7 @@ import os, sys
 import argparse
 from argparse import RawTextHelpFormatter
 import configparser
+from lxml import etree
 
 
 # répertoire courant
@@ -36,6 +37,7 @@ config.read( script_dir + '/config.ini')
 # variables globales
 mode_debug = False
 
+f_sandre = ""
 
 
 
@@ -56,10 +58,12 @@ def Logguer(logString):
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+def ExtractionScenario():
+
+  Logguer("Extraction des infos du scénario")
 
 
-
-
+ # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
@@ -70,13 +74,33 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
 """, formatter_class=RawTextHelpFormatter)
 
   # mode debug optionnel pur sortie console
+  global mode_debug
   if ('-debug' in sys.argv):
     mode_debug = True
-    ArgvIdEnquete = ArgvIdEnquete + 1
     pass
 
-  # si on est là c'est que aucune commande n'a été demandée -> on affiche l'aide
-  Logguer(parser.print_help())
+  if ( len(sys.argv) == 1 ):
+    # si on est là c'est que aucune commande n'a été demandée -> on affiche l'aide
+    Logguer(parser.print_help())
+
+  else:
+    # le premier argument doit être le nom du fichier
+    f_sandre = sys.argv[1]
+
+    Logguer("Traitement du fichier : " + f_sandre)
+
+    # on ouvre le fichier
+    with open(script_dir + '/' + f_sandre, encoding='utf-8') as f:
+      lines = f.readlines()
+
+
+      ExtractionScenario()
+
+    # on ferme le fichier
+    f.close()
+
+
+
 
   pass
 
