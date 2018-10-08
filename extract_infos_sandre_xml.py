@@ -1,5 +1,4 @@
-﻿# coding: utf8
-#-------------------------------------------------------------------------------
+﻿#-------------------------------------------------------------------------------
 # Name:        Decouverte export XML SANDRE
 #
 # Purpose:     Le but de ce script est de lire un fichier de données XML afin de découvrir ce qu'il contient
@@ -17,7 +16,10 @@
 # 3. sortie dans un fichier de synthèse
 
 # utilisation de l'API http://www.sandre.eaufrance.fr/api-referentiel
+# pour une station : pas d'API
+#  http://www.sandre.eaufrance.fr/urn.php?urn=urn:sandre:donnees:SysTraitementEauxUsees:FRA:code:0435047S0003:::::xml
 # pour obtenir le nom des paramètres
+# https://api.sandre.eaufrance.fr/referentiels/v1/parametre.xml?filter=<Filter><IS><Field>CdParametre</Field><Value>1313</Value></IS></Filter>
 
 # problème dans le fichier SANDRE : le namespace n'a pas de prefixe
 # ligne 4 = rajout à la main
@@ -78,28 +80,43 @@ def xmlGetTextNodes(doc, xpath):
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-def ExtractionScenario():
+def ExtractionInfosGenerales():
 
-  Logguer("Extraction des infos du scénario")
+  Logguer("Extraction des infos générales sur le fichier")
 
+  # ce que contient le fichier
   Scenario = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/NomScenario/text()')
+  # plage de dates des données
   DateDebutReference = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/DateDebutReference/text()')
   DateFinReference = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/DateFinReference/text()')
-
-  Logguer("")
-  Logguer("Scénario : " + Scenario)
-  Logguer("date début des données : " + DateDebutReference)
-  Logguer("date fin des données   : " + DateFinReference)
-  Logguer("")
 
   # on écrit dans le fichier
   with codecs.open(f_synthese, "a", "utf-8") as f:
     f.write("Scénario : " + Scenario + "\n")
-    f.write("date début des données : " + DateDebutReference + "\n")
-    f.write("date fin des données   : " + DateFinReference + "\n")
+    f.write("date de début des données : " + DateDebutReference + "\n")
+    f.write("date de fin des données   : " + DateFinReference + "\n")
     f.write("\n")
     f.close()
 
+  # les ouvrages / stations concernées
+  # normalement : que 1. Si plus de 1 : on sort
+  if ( len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution', namespaces=cfg['ns']) ) != 1 ):
+    Logguer( "Le fichier contient des données de plus d'un ouvrage : cela n'est pas autorisé" )
+    Logguer( "FIN" )
+  else:
+    CdOuvrageDepollution = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/CdOuvrageDepollution/text()')
+    NomOuvrageDepollution = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/NomOuvrageDepollution/text()')
+    DetailXMLStation = "http://www.sandre.eaufrance.fr/urn.php?urn=urn:sandre:donnees:SysTraitementEauxUsees:FRA:code:" + CdOuvrageDepollution + ":::::xml"
+
+    # on écrit dans le fichier
+    with codecs.open(f_synthese, "a", "utf-8") as f:
+      f.write("code SANDRE de la station : " + CdOuvrageDepollution + "\n")
+      f.write("Nom de la station dans le fichier : " + NomOuvrageDepollution + "\n")
+      f.write("Détails de la station dans le SI Eau  : " + DetailXMLStation + "\n")
+      f.write("\n")
+      f.close()
+
+  Logguer("fait")
 
 
  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -144,7 +161,7 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
       f.write("\n")
       f.close()
 
-    ExtractionScenario()
+    ExtractionInfosGenerales()
 
 
 
