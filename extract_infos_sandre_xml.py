@@ -1,4 +1,4 @@
-# coding: utf8
+﻿# coding: utf8
 #-------------------------------------------------------------------------------
 # Name:        Decouverte export XML SANDRE
 #
@@ -29,6 +29,7 @@ import argparse
 from argparse import RawTextHelpFormatter
 import configparser
 from lxml import etree
+import codecs
 
 
 # répertoire courant
@@ -38,6 +39,8 @@ script_dir = os.path.dirname(__file__)
 config = configparser.ConfigParser()
 config.read( script_dir + '/config.ini')
 
+# fichier de sortie
+f_synthese = script_dir + "\\synthese_"
 
 # variables globales
 mode_debug = False
@@ -79,7 +82,23 @@ def ExtractionScenario():
 
   Logguer("Extraction des infos du scénario")
 
-  print( xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/NomScenario/text()')  )
+  Scenario = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/NomScenario/text()')
+  DateDebutReference = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/DateDebutReference/text()')
+  DateFinReference = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/DateFinReference/text()')
+
+  Logguer("")
+  Logguer("Scénario : " + Scenario)
+  Logguer("date début des données : " + DateDebutReference)
+  Logguer("date fin des données   : " + DateFinReference)
+  Logguer("")
+
+  # on écrit dans le fichier
+  with codecs.open(f_synthese, "a", "utf-8") as f:
+    f.write("Scénario : " + Scenario + "\n")
+    f.write("date début des données : " + DateDebutReference + "\n")
+    f.write("date fin des données   : " + DateFinReference + "\n")
+    f.write("\n")
+    f.close()
 
 
 
@@ -105,14 +124,25 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
 
   else:
     # le premier argument doit être le nom du fichier
+    # TODO chemin relatif pour le moment
     f_sandre = ".\\" + sys.argv[1]
 
     Logguer("Traitement du fichier : " + f_sandre)
+    # nom du fichier de sortie
+    global f_synthese
+    f_synthese =  f_synthese +  str(sys.argv[1])[:-3] + "txt"
 
 
     # on ouvre le fichier
     global xml_sandre_tree
     xml_sandre_tree = etree.parse( f_sandre )
+
+    # on prépare le fichie de sortie
+    # w = on écrase le contenu existant
+    with codecs.open(f_synthese, "w", "utf-8") as f:
+      f.write("Extraction des informations du fichier SANDRE " + f_sandre + "\n")
+      f.write("\n")
+      f.close()
 
     ExtractionScenario()
 
