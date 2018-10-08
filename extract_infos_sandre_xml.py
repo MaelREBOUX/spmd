@@ -19,6 +19,11 @@
 # utilisation de l'API http://www.sandre.eaufrance.fr/api-referentiel
 # pour obtenir le nom des paramètres
 
+# problème dans le fichier SANDRE : le namespace n'a pas de prefixe
+# ligne 4 = rajout à la main
+# xmlns:assai="http://xml.sandre.eaufrance.fr/scenario/fct_assain/3"
+
+
 import os, sys
 import argparse
 from argparse import RawTextHelpFormatter
@@ -37,10 +42,13 @@ config.read( script_dir + '/config.ini')
 # variables globales
 mode_debug = False
 
-f_sandre = ""
 
-
-
+# xml namespaces
+cfg = {
+  'ns': {
+    'assai'   : u'http://xml.sandre.eaufrance.fr/scenario/fct_assain/3'
+  }
+}
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -58,9 +66,21 @@ def Logguer(logString):
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+def xmlGetTextNodes(doc, xpath):
+    """
+    shorthand to retrieve serialized text nodes matching a specific xpath
+    """
+    return '|'.join(doc.xpath(xpath, namespaces=cfg['ns']))
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 def ExtractionScenario():
 
   Logguer("Extraction des infos du scénario")
+
+  print( xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/NomScenario/text()')  )
+
 
 
  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -85,19 +105,16 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
 
   else:
     # le premier argument doit être le nom du fichier
-    f_sandre = sys.argv[1]
+    f_sandre = ".\\" + sys.argv[1]
 
     Logguer("Traitement du fichier : " + f_sandre)
 
+
     # on ouvre le fichier
-    with open(script_dir + '/' + f_sandre, encoding='utf-8') as f:
-      lines = f.readlines()
+    global xml_sandre_tree
+    xml_sandre_tree = etree.parse( f_sandre )
 
-
-      ExtractionScenario()
-
-    # on ferme le fichier
-    f.close()
+    ExtractionScenario()
 
 
 
