@@ -32,7 +32,7 @@ from argparse import RawTextHelpFormatter
 import configparser
 from lxml import etree
 import codecs
-import pprint
+import requests
 
 
 # répertoire courant
@@ -177,6 +177,50 @@ def ExtractionInfosMesures():
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+def RecupInfosParametre(code_parametre, code_unite_mesure):
+
+  # on va appele l'API du SANDRE pour récupérer des infos sur le paramètre
+  url_api_sandre = "https://api.sandre.eaufrance.fr/referentiels/v1/parametre.xml?filter=%3CFilter%3E%3CIS%3E%3CField%3ECdParametre%3C/Field%3E%3CValue%3E"+code_parametre+"%3C/Value%3E%3C/IS%3E%3C/Filter%3E"
+
+  # on ouvre une session
+  r = requests.Session()
+
+  # on voit si on est en mode proxy ou pas
+  if (config.get('proxy', 'enable') == "true" ):
+    # oui alors on va lire la configuration
+    proxyConfig = {
+      'http': ''+config.get('proxy','http')+'',
+      'https': ''+config.get('proxy','https')+'',
+    }
+    r.proxies = proxyConfig
+
+
+  # on récupère la réponse de lAPI qui est du XML
+  try:
+    # ceci désactive le message d'avertissement sur cetificat dans le texte de réponse
+    requests.packages.urllib3.disable_warnings()
+    # on peut maintenant lancer la requête. le verify c'est pour ne pas vérifier le certificat du proxy ou du site distant
+    xml_content = r.get(url_api_sandre, verify=False).text
+    xml_tree = etree.parse(xml_content)
+
+    # on doit récupérer 2 choses : le libellé du paramètre et son unité de mesure
+    LibParam = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/NomParametre')
+    print(LibParam)
+
+
+    #print(xml_content)
+
+
+  except Exception as err:
+    print( str(err) )
+
+  r.close()
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
 
 
 
@@ -219,9 +263,10 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
       f.write("\n")
       f.close()
 
-    ExtractionInfosGenerales()
-    ExtractionInfosMesures()
+    #ExtractionInfosGenerales()
+    #ExtractionInfosMesures()
 
+    RecupInfosParametre("1314","175")
 
 
 
