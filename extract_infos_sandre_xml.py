@@ -138,27 +138,37 @@ def ExtractionInfosMesures():
     f.close()
 
   # boucle sur les points de mesure
-  i = 1
-  while i <= nbPointMesure :
-
-    NumeroPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/NumeroPointMesure/text()')
-    LbPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/LbPointMesure/text()')
-
+  idxMesure = 1
+  while idxMesure <= nbPointMesure :
+    NumeroPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/NumeroPointMesure/text()')
+    LbPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/LbPointMesure/text()')
     Logguer("")
-    Logguer( "station " + str(i) )
+    Logguer( "station " + str(idxMesure) )
     Logguer( str(NumeroPointMesure) + ' : '+ LbPointMesure )
 
-    # on va maintenant regarder le nb de prélèvements
-    # un prélèvement peut contenir plusieurs analyses
-    nbPrlvt = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/Prlvt', namespaces=cfg['ns']) )
+    # nb de prélèvements
+    nbPrlvt = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt', namespaces=cfg['ns']) )
     Logguer( "  " + str(nbPrlvt) + " prélèvements trouvés" )
 
-    # boucle sur les prélèvements pour trouver les analyses
-    j = 1
-    nbAnalyses = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/Prlvt['+str(j)+']/Analyse', namespaces=cfg['ns']) )
-    Logguer( "    " + str(nbAnalyses) + " analyses trouvées" )
+    # boucle sur les prélèvements
+    idxPrlvt = 1
+    while idxPrlvt <= nbPrlvt :
+      # nb d'analyses
+      nbAnalyses = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse', namespaces=cfg['ns']) )
+      Logguer( "    " + str(nbAnalyses) + " analyses trouvées" )
 
-    i += 1
+      # boucle sur les analyses
+      idxAnalyse = 1
+      while idxAnalyse <= nbAnalyses :
+        CdParametre = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse['+str(idxAnalyse)+']/Parametre/CdParametre/text()')
+        Logguer( "      paramètre trouvé : " + str(CdParametre) )
+
+        idxAnalyse += 1
+
+      idxPrlvt += 1
+
+    idxMesure += 1
+
 
 
   Logguer("")
