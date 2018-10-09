@@ -145,8 +145,18 @@ def ExtractionInfosMesures():
     LbPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/LbPointMesure/text()')
 
     Logguer("")
-    Logguer( str(i) + " | " + str(NumeroPointMesure) + ' : '+ LbPointMesure)
+    Logguer( "station " + str(i) )
+    Logguer( str(NumeroPointMesure) + ' : '+ LbPointMesure )
 
+    # on va maintenant regarder le nb de prélèvements
+    # un prélèvement peut contenir plusieurs analyses
+    nbPrlvt = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/Prlvt', namespaces=cfg['ns']) )
+    Logguer( "  " + str(nbPrlvt) + " prélèvements trouvés" )
+
+    # boucle sur les prélèvements pour trouver les analyses
+    j = 1
+    nbAnalyses = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/Prlvt['+str(j)+']/Analyse', namespaces=cfg['ns']) )
+    Logguer( "    " + str(nbAnalyses) + " analyses trouvées" )
 
     i += 1
 
