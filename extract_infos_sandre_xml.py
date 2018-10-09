@@ -32,6 +32,7 @@ from argparse import RawTextHelpFormatter
 import configparser
 from lxml import etree
 import codecs
+import pprint
 
 
 # répertoire courant
@@ -117,9 +118,45 @@ def ExtractionInfosGenerales():
       f.close()
 
   Logguer("fait")
+  Logguer("")
 
 
  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+def ExtractionInfosMesures():
+
+  Logguer("Extraction des infos sur les mesures et les paramètres")
+
+  # on compte le nb de PointMesure
+  nbPointMesure = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure', namespaces=cfg['ns']) )
+
+  Logguer( str(nbPointMesure) + " point(s) de mesure trouvé(s)" )
+  with codecs.open(f_synthese, "a", "utf-8") as f:
+    f.write(str(nbPointMesure) + " point(s) de mesure trouvé(s)" + "\n")
+    f.write("\n")
+    f.close()
+
+  # boucle sur les points de mesure
+  i = 1
+  while i <= nbPointMesure :
+
+    NumeroPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/NumeroPointMesure/text()')
+    LbPointMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(i)+']/LbPointMesure/text()')
+
+    Logguer("")
+    Logguer( str(i) + " | " + str(NumeroPointMesure) + ' : '+ LbPointMesure)
+
+
+    i += 1
+
+
+  Logguer("")
+  Logguer("------------------------------------------------------------")
+  Logguer("")
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 
@@ -145,6 +182,7 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
     f_sandre = ".\\" + sys.argv[1]
 
     Logguer("Traitement du fichier : " + f_sandre)
+    Logguer("")
     # nom du fichier de sortie
     global f_synthese
     f_synthese =  f_synthese +  str(sys.argv[1])[:-3] + "txt"
@@ -162,6 +200,7 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
       f.close()
 
     ExtractionInfosGenerales()
+    ExtractionInfosMesures()
 
 
 
