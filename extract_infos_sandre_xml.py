@@ -218,6 +218,18 @@ def RecupInfosParametre(code_parametre, code_unite_mesure):
 
   r.close()
 
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def CorrigerXmlSandre(xml):
+
+  # cette petite fonction ajoute un préfixe aux namespaces du SANDRE
+  # sinon ça plante le parsing par lkml
+
+  xml_corrige = xml.replace("xmlns=\"http://xml.sandre.eaufrance.fr/","xmlns:assai=\"http://xml.sandre.eaufrance.fr/")
+
+  return xml_corrige
+
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -254,9 +266,17 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
     f_synthese =  f_synthese +  str(sys.argv[1])[:-3] + "txt"
 
 
-    # on ouvre le fichier
+    # on ouvre le fichier d'un coup
+    xml_fichier = open(f_sandre,'r',encoding='utf-8').read()
+    # on corrige le xml
+    xml_corrige = CorrigerXmlSandre(xml_fichier)
+    # on le force en utf-8 sinon on a des erreurs
+    xml = xml_corrige.encode('utf-8')
+
+    # on déclare la variable globale car le doc XML sera appelée dans les autres fonctions
     global xml_sandre_tree
-    xml_sandre_tree = etree.parse( f_sandre )
+    # enfin : on parse le xml
+    xml_sandre_tree = etree.XML(xml)
 
     # on prépare le fichie de sortie
     # w = on écrase le contenu existant
@@ -265,10 +285,10 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
       f.write("\n")
       f.close()
 
-    #ExtractionInfosGenerales()
-    #ExtractionInfosMesures()
+    ExtractionInfosGenerales()
+    ExtractionInfosMesures()
 
-    RecupInfosParametre("1314","175")
+    #RecupInfosParametre("1314","175")
 
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FctAssain  xsi:schemaLocation="http://xml.sandre.eaufrance.fr/scenario/fct_assain/3 http://xml.sandre.eaufrance.fr/scenario/fct_assain/3/sandre_sc_fct_assain.xsd" xmlns:assai="http://xml.sandre.eaufrance.fr/scenario/fct_assain/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<FctAssain  xsi:schemaLocation="http://xml.sandre.eaufrance.fr/scenario/fct_assain/3 http://xml.sandre.eaufrance.fr/scenario/fct_assain/3/sandre_sc_fct_assain.xsd" xmlns="http://xml.sandre.eaufrance.fr/scenario/fct_assain/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Scenario>
         <CodeScenario>FCT_ASSAIN</CodeScenario>
         <VersionScenario>3</VersionScenario>
