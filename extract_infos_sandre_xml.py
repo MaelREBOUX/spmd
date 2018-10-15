@@ -33,6 +33,7 @@ import configparser
 from lxml import etree
 import codecs
 import requests
+import random
 
 
 # répertoire courant
@@ -180,7 +181,8 @@ def ExtractionInfosMesures():
 def RecupInfosParametre(code_parametre, code_unite_mesure):
 
   # on va appele l'API du SANDRE pour récupérer des infos sur le paramètre
-  url_api_sandre = "https://api.sandre.eaufrance.fr/referentiels/v1/parametre.xml?filter=%3CFilter%3E%3CIS%3E%3CField%3ECdParametre%3C/Field%3E%3CValue%3E"+code_parametre+"%3C/Value%3E%3C/IS%3E%3C/Filter%3E"
+  # on rajoute un nombre u hasard pour contourner le cache proxy
+  url_api_sandre = "https://api.sandre.eaufrance.fr/referentiels/v1/parametre.xml?_"+ str(random.randrange(1, 100000)) + "&filter=%3CFilter%3E%3CIS%3E%3CField%3ECdParametre%3C/Field%3E%3CValue%3E"+code_parametre+"%3C/Value%3E%3C/IS%3E%3C/Filter%3E"
 
   # on ouvre une session
   r = requests.Session()
