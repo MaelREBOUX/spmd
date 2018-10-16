@@ -184,20 +184,21 @@ def ExtractionInfosMesures():
     # on sort de la boucle sur les analyses
     Logguer( "    " + str(nbTotalAnalyses) + " analyses trouvées" )
 
-    # on peut produire la liste des paramètres sans doublons
-    listParamUnique = []
-    i = 0
+    if nbTotalAnalyses > 0 :
+      # on peut produire la liste des paramètres sans doublons
+      listParamUnique = []
+      i = 0
 
-    for x in listParam:
-      if x not in listParamUnique:
-        listParamUnique.append(x)
-    i += 1
+      for x in listParam:
+        if x not in listParamUnique:
+          listParamUnique.append(x)
+      i += 1
 
-    # et là seulement on interroge l'API pour avoir le nom du paramètre
-    Parametre = RecupInfosParametre(CdParametre, CdUniteMesure)
+      # et là seulement on interroge l'API pour avoir le nom du paramètre
+      Parametre = RecupInfosParametre(CdParametre, CdUniteMesure)
 
-    Logguer("    Paramètres trouvés :")
-    Logguer( "      - " + Parametre )
+      Logguer("    Paramètres trouvés :")
+      Logguer( "      - " + Parametre )
 
   Logguer("")
   Logguer("------------------------------------------------------------")
