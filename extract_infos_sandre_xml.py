@@ -162,7 +162,11 @@ def ExtractionInfosMesures():
       idxAnalyse = 1
       while idxAnalyse <= nbAnalyses :
         CdParametre = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse['+str(idxAnalyse)+']/Parametre/CdParametre/text()')
-        Logguer( "      paramètre trouvé : " + str(CdParametre) )
+        CdUniteMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse['+str(idxAnalyse)+']/UniteMesure/CdUniteMesure/text()')
+        #Logguer( "      paramètre trouvé : " + str(CdParametre) + " | " + CdUniteMesure )
+
+        # on interroge l'API pour avoir le nom du paramètre
+        RecupInfosParametre(CdParametre, CdUniteMesure)
 
         idxAnalyse += 1
 
@@ -203,14 +207,17 @@ def RecupInfosParametre(code_parametre, code_unite_mesure):
     requests.packages.urllib3.disable_warnings()
     # on peut maintenant lancer la requête. le verify c'est pour ne pas vérifier le certificat du proxy ou du site distant
     xml_content = r.get(url_api_sandre, verify=False).text
-    xml_tree = etree.parse(xml_content)
+
+    # on corrige le xml reçu
+    xml_corrige = CorrigerXmlSandre(xml_content)
+
+    # on parse ce xml
+    xml_tree = etree.XML(xml_corrige)
 
     # on doit récupérer 2 choses : le libellé du paramètre et son unité de mesure
-    LibParam = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/NomParametre')
-    print(LibParam)
-
-
-    #print(xml_content)
+    LibParam = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/NomParametre/text()')
+    LbUniteReference =  xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/ParametreChimique/ParChimiqueQuant/UniteReference/LbUniteReference/text()')
+    print("      Paramètre trouvé = " + LibParam + "  | unité : " + LbUniteReference + "")
 
 
   except Exception as err:
@@ -288,7 +295,7 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
     ExtractionInfosGenerales()
     ExtractionInfosMesures()
 
-    #RecupInfosParametre("1314","175")
+    #RecupInfosParametre("1799","67")
 
 
 
