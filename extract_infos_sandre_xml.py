@@ -71,6 +71,11 @@ def Logguer(logString):
     # sortie dans la console python
     print( logString )
 
+  # on écrit aussi dans le fichier de synthèse
+  with codecs.open(f_synthese, "a", "utf-8") as f:
+    f.write(logString + "\n")
+    f.close()
+
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def xmlGetTextNodes(doc, xpath):
@@ -84,7 +89,7 @@ def xmlGetTextNodes(doc, xpath):
 
 def ExtractionInfosGenerales():
 
-  Logguer("Extraction des infos générales sur le fichier")
+  #Logguer("Extraction des infos générales sur le fichier")
 
   # ce que contient le fichier
   Scenario = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/NomScenario/text()')
@@ -93,12 +98,11 @@ def ExtractionInfosGenerales():
   DateFinReference = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/Scenario/DateFinReference/text()')
 
   # on écrit dans le fichier
-  with codecs.open(f_synthese, "a", "utf-8") as f:
-    f.write("Scénario : " + Scenario + "\n")
-    f.write("date de début des données : " + DateDebutReference + "\n")
-    f.write("date de fin des données   : " + DateFinReference + "\n")
-    f.write("\n")
-    f.close()
+  Logguer("Scénario : " + Scenario )
+  Logguer("")
+  Logguer("date de début des données : " + DateDebutReference )
+  Logguer("date de fin des données   : " + DateFinReference )
+  Logguer("")
 
   # les ouvrages / stations concernées
   # normalement : que 1. Si plus de 1 : on sort
@@ -111,15 +115,13 @@ def ExtractionInfosGenerales():
     DetailXMLStation = "http://www.sandre.eaufrance.fr/urn.php?urn=urn:sandre:donnees:SysTraitementEauxUsees:FRA:code:" + CdOuvrageDepollution + ":::::xml"
 
     # on écrit dans le fichier
-    with codecs.open(f_synthese, "a", "utf-8") as f:
-      f.write("code SANDRE de la station : " + CdOuvrageDepollution + "\n")
-      f.write("Nom de la station dans le fichier : " + NomOuvrageDepollution + "\n")
-      f.write("Détails de la station dans le SI Eau  : " + DetailXMLStation + "\n")
-      f.write("\n")
-      f.close()
+    Logguer("code SANDRE de la station : " + CdOuvrageDepollution)
+    Logguer("Nom de la station dans le fichier : " + NomOuvrageDepollution )
+    Logguer("Détails de la station dans le SI Eau  : " + DetailXMLStation )
+    Logguer("")
 
-  Logguer("fait")
-  Logguer("")
+  #Logguer("fait")
+  #Logguer("")
 
 
  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -133,10 +135,6 @@ def ExtractionInfosMesures():
   nbPointMesure = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure', namespaces=cfg['ns']) )
 
   Logguer( str(nbPointMesure) + " point(s) de mesure trouvé(s)" )
-  with codecs.open(f_synthese, "a", "utf-8") as f:
-    f.write(str(nbPointMesure) + " point(s) de mesure trouvé(s)" + "\n")
-    f.write("\n")
-    f.close()
 
   # boucle sur les points de mesure
   f_to_write = ""
@@ -148,13 +146,10 @@ def ExtractionInfosMesures():
     Logguer("")
     Logguer( "station " + str(idxMesure) )
     Logguer( str(NumeroPointMesure) + ' : '+ LbPointMesure )
-    f_to_write += "\n"
-    f_to_write += str(idxMesure) + str(NumeroPointMesure) + ' : '+ LbPointMesure + " \n"
 
     # nb de prélèvements
     nbPrlvt = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt', namespaces=cfg['ns']) )
     Logguer( "  " + str(nbPrlvt) + " prélèvements trouvés" )
-    f_to_write += "  " + str(nbPrlvt) + " prélèvements trouvés \n"
 
     # boucle sur les prélèvements
     idxPrlvt = 1
@@ -188,7 +183,6 @@ def ExtractionInfosMesures():
 
     # on sort de la boucle sur les analyses
     Logguer( "    " + str(nbTotalAnalyses) + " analyses trouvées" )
-    f_to_write += "    " + str(nbTotalAnalyses) + " analyses trouvées \n"
 
     # on peut produire la liste des paramètres sans doublons
     listParamUnique = []
@@ -200,23 +194,15 @@ def ExtractionInfosMesures():
     i += 1
 
     # et là seulement on interroge l'API pour avoir le nom du paramètre
-    Logguer("    Paramètres trouvés :")
-    f_to_write += "    Paramètres trouvés : \n"
-
     Parametre = RecupInfosParametre(CdParametre, CdUniteMesure)
 
+    Logguer("    Paramètres trouvés :")
     Logguer( "      - " + Parametre )
-    f_to_write +=  "      - " + Parametre + "\n"
-
-    # on écrit enfin dans le fichier de sortie
-    with codecs.open(f_synthese, "a", "utf-8") as f:
-      f.write(f_to_write)
-      f.close()
-
 
   Logguer("")
   Logguer("------------------------------------------------------------")
   Logguer("")
+
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -321,14 +307,20 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
     # TODO chemin relatif pour le moment
     f_sandre = ".\\" + sys.argv[1]
 
-    Logguer("Traitement du fichier : " + f_sandre)
-    Logguer("")
     # nom du fichier de sortie
     global f_synthese
     f_synthese =  f_synthese +  str(sys.argv[1])[:-3] + "txt"
 
+    # on prépare le fichie de sortie
+    # w = on écrase le contenu existant
+    with codecs.open(f_synthese, "w", "utf-8") as f:
+      f.write("")
+      f.close()
 
-    # on ouvre le fichier d'un coup
+    Logguer("Extraction des informations du fichier SANDRE " + f_sandre)
+    Logguer("")
+
+    # on ouvre le fichier xml d'un coup
     xml_fichier = open(f_sandre,'r',encoding='utf-8').read()
     # on corrige le xml
     xml_corrige = CorrigerXmlSandre(xml_fichier)
@@ -340,13 +332,7 @@ Ce script permet de lire les informations contenues dans un export SANDRE.
     # enfin : on parse le xml
     xml_sandre_tree = etree.XML(xml)
 
-    # on prépare le fichie de sortie
-    # w = on écrase le contenu existant
-    with codecs.open(f_synthese, "w", "utf-8") as f:
-      f.write("Extraction des informations du fichier SANDRE " + f_sandre + "\n")
-      f.write("\n")
-      f.close()
-
+    # les sous-fonctions
     ExtractionInfosGenerales()
     ExtractionInfosMesures()
 
