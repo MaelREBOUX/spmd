@@ -153,10 +153,15 @@ def ExtractionInfosMesures():
 
     # boucle sur les prélèvements
     idxPrlvt = 1
+    nbTotalAnalyses = 0
     while idxPrlvt <= nbPrlvt :
       # nb d'analyses
       nbAnalyses = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse', namespaces=cfg['ns']) )
-      Logguer( "    " + str(nbAnalyses) + " analyses trouvées" )
+      #Logguer( "    " + str(nbAnalyses) + " analyses trouvées" )
+
+      # on déclare un tableau qui va stocker les couples paramètres|unités
+      # pour ensuite dédoublonner
+      listParam = []
 
       # boucle sur les analyses
       idxAnalyse = 1
@@ -165,8 +170,10 @@ def ExtractionInfosMesures():
         CdUniteMesure = xmlGetTextNodes(xml_sandre_tree, '/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse['+str(idxAnalyse)+']/UniteMesure/CdUniteMesure/text()')
         #Logguer( "      paramètre trouvé : " + str(CdParametre) + " | " + CdUniteMesure )
 
-        # on interroge l'API pour avoir le nom du paramètre
-        RecupInfosParametre(CdParametre, CdUniteMesure)
+        # on stocke
+        listParam.append([CdParametre,CdUniteMesure])
+        # on compte
+        nbTotalAnalyses += 1
 
         idxAnalyse += 1
 
@@ -174,6 +181,21 @@ def ExtractionInfosMesures():
 
     idxMesure += 1
 
+    # on sort de la boucle sur les analyses
+    Logguer( "    " + str(nbTotalAnalyses) + " analyses trouvées" )
+
+    # on peut produire la liste des paramètres sans doublons
+    listParamUnique = []
+    i = 0
+
+    for x in listParam:
+      if x not in listParamUnique:
+        listParamUnique.append(x)
+    i += 1
+
+    # et là seulement on interroge l'API pour avoir le nom du paramètre
+    Logguer("    Paramètres trouvés :")
+    RecupInfosParametre(CdParametre, CdUniteMesure)
 
 
   Logguer("")
@@ -217,7 +239,7 @@ def RecupInfosParametre(code_parametre, code_unite_mesure):
     # on doit récupérer 2 choses : le libellé du paramètre et son unité de mesure
     LibParam = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/NomParametre/text()')
     LbUniteReference =  xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/ParametreChimique/ParChimiqueQuant/UniteReference/LbUniteReference/text()')
-    print("      Paramètre trouvé = " + LibParam + "  | unité : " + LbUniteReference + "")
+    print("      - " + LibParam + "  | unité : " + LbUniteReference + "")
 
 
   except Exception as err:
