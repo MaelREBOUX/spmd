@@ -253,10 +253,25 @@ def RecupInfosParametre(code_parametre, code_unite_mesure):
     xml_tree = etree.XML(xml_corrige)
 
     # on doit récupérer 2 choses : le libellé du paramètre et son unité de mesure
-    LibParam = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/NomParametre/text()')
-    LbUniteReference =  xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/ParametreChimique/ParChimiqueQuant/UniteReference/LbUniteReference/text()')
 
-    # on retourne
+    # libellé du paramètre : facile
+    LibParam = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/NomParametre/text()')
+
+    # unité : il peut y avoir plusieurs unités pour un paramètre. Il faut matcher la bonne
+    nbUnite = len( xml_tree.xpath('/REFERENTIELS/Referentiel/Parametre/ParametreChimique/ParChimiqueQuant/UniteReference', namespaces=cfg['ns']) )
+    LbUniteReference = "inconnue"
+    # on boucle pour trouver celle utilisée
+    i = 1
+    while i <= nbUnite :
+      codeUnite = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/ParametreChimique/ParChimiqueQuant/UniteReference['+str(i)+']/CdUniteReference/text()')
+      if codeUnite == code_unite_mesure :
+        # on le récupère
+        LbUniteReference =  xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/Parametre/ParametreChimique/ParChimiqueQuant/UniteReference['+str(i)+']/LbUniteReference/text()')
+        # on sort
+        break
+      i += 1
+
+    # on retourne le tout
     return( LibParam + "  | unité : " + LbUniteReference  )
     #print("      - " + LibParam + "  | unité : " + LbUniteReference + "")
 
