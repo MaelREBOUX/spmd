@@ -165,6 +165,8 @@ def Assai_ExtractionInfosMesures():
 
   Logguer( str(nbPointMesure) + " point(s) de mesure trouvé(s)" )
 
+  nbTotalAnalyses = 0
+
   # boucle sur les points de mesure
   f_to_write = ""
   idxMesure = 1
@@ -182,7 +184,8 @@ def Assai_ExtractionInfosMesures():
 
     # boucle sur les prélèvements
     idxPrlvt = 1
-    nbTotalAnalyses = 0
+    nbAnalysesStation = 0
+
     while idxPrlvt <= nbPrlvt :
       # nb d'analyses
       nbAnalyses = len( xml_sandre_tree.xpath('/FctAssain/OuvrageDepollution/PointMesure['+str(idxMesure)+']/Prlvt['+str(idxPrlvt)+']/Analyse', namespaces=cfg['ns']) )
@@ -202,6 +205,7 @@ def Assai_ExtractionInfosMesures():
         # on stocke
         listParam.append([CdParametre,CdUniteMesure])
         # on compte
+        nbAnalysesStation += 1
         nbTotalAnalyses += 1
 
         idxAnalyse += 1
@@ -211,7 +215,7 @@ def Assai_ExtractionInfosMesures():
     idxMesure += 1
 
     # on sort de la boucle sur les analyses
-    Logguer( "    " + str(nbTotalAnalyses) + " analyses trouvées" )
+    Logguer( "    " + str(nbAnalysesStation) + " analyses trouvées" )
 
     if nbTotalAnalyses > 0 :
       # on peut produire la liste des paramètres sans doublons
@@ -229,7 +233,10 @@ def Assai_ExtractionInfosMesures():
       Logguer("    Paramètres trouvés :")
       Logguer( "      - " + Parametre )
 
+
   Logguer("")
+  Logguer("------------------------------------------------------------")
+  Logguer( "  " + str(nbTotalAnalyses) + " analyses trouvées au total" )
   Logguer("------------------------------------------------------------")
   Logguer("")
 
