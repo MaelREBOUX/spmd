@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QUESU xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xml.sandre.eaufrance.fr/scenario/quesu/2">
+	<Scenario>
+		<CodeScenario>QUESU_PHY</CodeScenario>
+		<VersionScenario>2</VersionScenario>
+		<NomScenario>Qualité des eaux superficielles continentales - Données physico-chimiques et microbiologiques</NomScenario>
+		<DateCreationFichier>2018-10-16</DateCreationFichier>
+		<DateDebutReference>2011-01-01</DateDebutReference>
+		<DateFinReference>2017-12-31</DateFinReference>
+		<Emetteur>
+			<CdIntervenant schemeAgencyID="SIRET">18450301900012</CdIntervenant>
+			<NomIntervenant>Agence de l'Eau Loire-Bretagne</NomIntervenant>
+		</Emetteur>
+		<Destinataire>
+			<CdIntervenant schemeAgencyID="SIRET">18450301900012</CdIntervenant>
+			<NomIntervenant>Agence de l'Eau Loire-Bretagne</NomIntervenant>
+		</Destinataire>
+	</Scenario>
+  <ResPC>
+		<CdStationMesureEauxSurface>04161490</CdStationMesureEauxSurface>
+		<PrelevementsPhysicoChimie>
+			<DatePrel>2011-01-20</DatePrel>
+			<HeurePrel>2011-01-20T10:00:00</HeurePrel>
+			<Support>
+				<CdSupport>3</CdSupport>
+			</Support>
+			<ProducteurPrelevement>
+				<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+			</ProducteurPrelevement>
+			<Preleveur>
+				<CdIntervenant schemeAgencyID="SIRET">50191456800016</CdIntervenant>
+			</Preleveur>
+			<PointPrel>
+				<CdPointEauxSurf>031</CdPointEauxSurf>
+			</PointPrel>
+			<Rsx>
+				<CodeSandreRdd>0400000900</CodeSandreRdd>
+			</Rsx>
+			<Analyse>
+				<DateAna>2011-01-20</DateAna>
+				<HeureAna>2011-01-20T10:00:00</HeureAna>
+				<RsAna>48</RsAna>
+				<RqAna>1</RqAna>
+				<InsituAna>0</InsituAna>
+				<QualAna>1</QualAna>
+				<StatutAna>2</StatutAna>
+				<Parametre>
+					<CdParametre>1340</CdParametre>
+				</Parametre>
+				<FractionAnalysee>
+					<CdFractionAnalysee>3</CdFractionAnalysee>
+				</FractionAnalysee>
+				<Methode>
+					<CdMethode>0</CdMethode>
+				</Methode>
+				<Producteur>
+					<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+				</Producteur>
+				<Laboratoire>
+					<CdIntervenant schemeAgencyID="SIRET">33210807500018</CdIntervenant>
+				</Laboratoire>
+				<Unite>
+					<CdUniteReference>173</CdUniteReference>
+				</Unite>
+			</Analyse>
+		</PrelevementsPhysicoChimie>
+    <PrelevementsPhysicoChimie>
+			<DatePrel>2011-03-01</DatePrel>
+			<HeurePrel>2011-03-01T10:00:00</HeurePrel>
+			<Support>
+				<CdSupport>3</CdSupport>
+			</Support>
+			<ProducteurPrelevement>
+				<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+			</ProducteurPrelevement>
+			<Preleveur>
+				<CdIntervenant schemeAgencyID="SIRET">50191456800016</CdIntervenant>
+			</Preleveur>
+			<PointPrel>
+				<CdPointEauxSurf>031</CdPointEauxSurf>
+			</PointPrel>
+			<Rsx>
+				<CodeSandreRdd>0400000900</CodeSandreRdd>
+			</Rsx>
+			<Analyse>
+				<DateAna>2011-03-01</DateAna>
+				<HeureAna>2011-03-01T10:00:00</HeureAna>
+				<RsAna>41</RsAna>
+				<RqAna>1</RqAna>
+				<InsituAna>0</InsituAna>
+				<QualAna>1</QualAna>
+				<StatutAna>2</StatutAna>
+				<Parametre>
+					<CdParametre>1340</CdParametre>
+				</Parametre>
+				<FractionAnalysee>
+					<CdFractionAnalysee>3</CdFractionAnalysee>
+				</FractionAnalysee>
+				<Methode>
+					<CdMethode>0</CdMethode>
+				</Methode>
+				<Producteur>
+					<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+				</Producteur>
+				<Laboratoire>
+					<CdIntervenant schemeAgencyID="SIRET">33210807500018</CdIntervenant>
+				</Laboratoire>
+				<Unite>
+					<CdUniteReference>173</CdUniteReference>
+				</Unite>
+			</Analyse>
+		</PrelevementsPhysicoChimie>
+	</ResPC>
+  <ResPC>
+		<CdStationMesureEauxSurface>04161495</CdStationMesureEauxSurface>
+		<PrelevementsPhysicoChimie>
+			<DatePrel>2011-01-20</DatePrel>
+			<HeurePrel>2011-01-20T10:00:00</HeurePrel>
+			<Support>
+				<CdSupport>3</CdSupport>
+			</Support>
+			<ProducteurPrelevement>
+				<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+			</ProducteurPrelevement>
+			<Preleveur>
+				<CdIntervenant schemeAgencyID="SIRET">50191456800016</CdIntervenant>
+			</Preleveur>
+			<PointPrel>
+				<CdPointEauxSurf>031</CdPointEauxSurf>
+			</PointPrel>
+			<Rsx>
+				<CodeSandreRdd>0400000900</CodeSandreRdd>
+			</Rsx>
+			<Analyse>
+				<DateAna>2011-01-20</DateAna>
+				<HeureAna>2011-01-20T10:00:00</HeureAna>
+				<RsAna>51</RsAna>
+				<RqAna>1</RqAna>
+				<InsituAna>0</InsituAna>
+				<QualAna>1</QualAna>
+				<StatutAna>2</StatutAna>
+				<Parametre>
+					<CdParametre>1340</CdParametre>
+				</Parametre>
+				<FractionAnalysee>
+					<CdFractionAnalysee>3</CdFractionAnalysee>
+				</FractionAnalysee>
+				<Methode>
+					<CdMethode>0</CdMethode>
+				</Methode>
+				<Producteur>
+					<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+				</Producteur>
+				<Laboratoire>
+					<CdIntervenant schemeAgencyID="SIRET">33210807500018</CdIntervenant>
+				</Laboratoire>
+				<Unite>
+					<CdUniteReference>173</CdUniteReference>
+				</Unite>
+			</Analyse>
+		</PrelevementsPhysicoChimie>
+		<PrelevementsPhysicoChimie>
+			<DatePrel>2011-03-01</DatePrel>
+			<HeurePrel>2011-03-01T10:00:00</HeurePrel>
+			<Support>
+				<CdSupport>3</CdSupport>
+			</Support>
+			<ProducteurPrelevement>
+				<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+			</ProducteurPrelevement>
+			<Preleveur>
+				<CdIntervenant schemeAgencyID="SIRET">50191456800016</CdIntervenant>
+			</Preleveur>
+			<PointPrel>
+				<CdPointEauxSurf>031</CdPointEauxSurf>
+			</PointPrel>
+			<Rsx>
+				<CodeSandreRdd>0400000900</CodeSandreRdd>
+			</Rsx>
+			<Analyse>
+				<DateAna>2011-03-01</DateAna>
+				<HeureAna>2011-03-01T10:00:00</HeureAna>
+				<RsAna>45</RsAna>
+				<RqAna>1</RqAna>
+				<InsituAna>0</InsituAna>
+				<QualAna>1</QualAna>
+				<StatutAna>2</StatutAna>
+				<Parametre>
+					<CdParametre>1340</CdParametre>
+				</Parametre>
+				<FractionAnalysee>
+					<CdFractionAnalysee>3</CdFractionAnalysee>
+				</FractionAnalysee>
+				<Methode>
+					<CdMethode>0</CdMethode>
+				</Methode>
+				<Producteur>
+					<CdIntervenant schemeAgencyID="SIRET">25350262900012</CdIntervenant>
+				</Producteur>
+				<Laboratoire>
+					<CdIntervenant schemeAgencyID="SIRET">33210807500018</CdIntervenant>
+				</Laboratoire>
+				<Unite>
+					<CdUniteReference>173</CdUniteReference>
+				</Unite>
+			</Analyse>
+		</PrelevementsPhysicoChimie>
+  </ResPC>
+</QUESU>
