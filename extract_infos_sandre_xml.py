@@ -260,7 +260,7 @@ def Quesu_ExtractionInfosMesures():
   idxPtMesure = 1
   while idxPtMesure <= nbPointMesure :
     NumeroPointMesure = xmlGetTextNodes(xml_sandre_tree, '/QUESU/ResPC['+str(idxPtMesure)+']/CdStationMesureEauxSurface/text()')
-    LbPointMesure = "TODO"
+    LbPointMesure = RecupNomStationMesureES(NumeroPointMesure)
 
     Logguer("")
     Logguer( "station " + str(idxPtMesure) )
@@ -317,8 +317,8 @@ def Quesu_ExtractionInfosMesures():
       i += 1
 
       # et là seulement on interroge l'API pour avoir le nom du paramètre
-      #Parametre = RecupInfosParametre(CdParametre, CdUniteMesure)
-      Parametre = "TODO : " + CdParametre + " ("+CdUniteMesure+")" #RecupInfosParametre(CdParametre, CdUniteMesure)
+      Parametre = RecupInfosParametre(CdParametre, CdUniteMesure)
+      #Parametre = "TODO : " + CdParametre + " ("+CdUniteMesure+")" #RecupInfosParametre(CdParametre, CdUniteMesure)
 
       Logguer("    Paramètres trouvés :")
       Logguer( "      - " + Parametre )
@@ -331,6 +331,54 @@ def Quesu_ExtractionInfosMesures():
   Logguer("")
 
   pass
+
+
+ # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def RecupNomStationMesureES(code_station):
+
+  # on appelle l'API du SANDRE
+  # on rajoute un nombre u hasard pour contourner le cache proxy
+  #url_api_sandre = "https://api.sandre.eaufrance.fr/referentiels/v1/parametre.xml?_"+ str(random.randrange(1, 100000)) + "&filter=%3CFilter%3E%3CIS%3E%3CField%3ECdParametre%3C/Field%3E%3CValue%3E"+code_parametre+"%3C/Value%3E%3C/IS%3E%3C/Filter%3E"
+  url_api_sandre = "https://api.sandre.eaufrance.fr/referentiels/v1/stationmesureeauxsurface.xml?_"+ str(random.randrange(1, 100000)) + "&filter=<Filter><IS><Field>CdStationMesureEauxSurface</Field><Value>"+code_station+"</Value></IS></Filter>"
+
+  # on ouvre une session
+  r = requests.Session()
+
+  # on voit si on est en mode proxy ou pas
+  if (config.get('proxy', 'enable') == "true" ):
+    # oui alors on va lire la configuration
+    proxyConfig = {
+      'http': ''+config.get('proxy','http')+'',
+      'https': ''+config.get('proxy','https')+'',
+    }
+    r.proxies = proxyConfig
+
+
+  # on récupère la réponse de lAPI qui est du XML
+  try:
+    # ceci désactive le message d'avertissement sur cetificat dans le texte de réponse
+    requests.packages.urllib3.disable_warnings()
+    # on peut maintenant lancer la requête. le verify c'est pour ne pas vérifier le certificat du proxy ou du site distant
+    xml_content = r.get(url_api_sandre, verify=False).text
+
+    # on corrige le xml reçu
+    xml_corrige = CorrigerXmlSandre(xml_content)
+
+    # on parse ce xml
+    xml_tree = etree.XML(xml_corrige)
+
+    # on doit récupérer 1 chose : le libellé de la station
+    NomStation = xmlGetTextNodes(xml_tree, '/REFERENTIELS/Referentiel/StationMesureEauxSurface/LbStationMesureEauxSurface/text()')
+
+    # on retourne le nom
+    return( NomStation )
+
+
+  except Exception as err:
+    print( str(err) )
+
+  r.close()
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
